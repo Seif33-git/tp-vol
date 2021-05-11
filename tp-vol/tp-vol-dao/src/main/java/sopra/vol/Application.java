@@ -73,10 +73,6 @@ public class Application {
 		return DriverManager.getConnection(jdbcUrl, username, password);
 	}
 
-	public IAeroportDao getAeroportDao() {
-		return aeroportDao;
-	}
-
 	public IReservationDao getReservationDao() {
 		return reservationDao;
 	}
