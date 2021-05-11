@@ -24,14 +24,12 @@ public class AdresseDaoJdbc implements IAdresseDao{
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("SELECT id, comportementale, technique, commentaires FROM evaluation");
+			ps = conn.prepareStatement("SELECT id, rue, complement, code_postal, ville, pays FROM evaluation");
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
 				Long id = rs.getLong("id");
-				Integer comportementale = rs.getInt("comportementale");
-				Integer technique = rs.getInt("technique");
-				String commentaires = rs.getString("commentaires");
+				String rue = rs.getString("");
 
 				Adresse evaluation = new Adresse();
 
