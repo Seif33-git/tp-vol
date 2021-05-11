@@ -4,20 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import sopra.vol.Application;
-import sopra.vol.dao.IAeroportDao;
+import sopra.vol.dao.ICompagnieAerienneDao;
 import sopra.vol.model.Aeroport;
-import sopra.vol.model.Ville;
+import sopra.vol.model.CompagnieAerienne;
 
-public class AeroportDaoJdbc implements IAeroportDao {
+public class CompagnieAerienneDaoJdbc implements ICompagnieAerienneDao {
 
 	@Override
-	public List<Aeroport> findAll() {
-		List<Aeroport> aeroports = new ArrayList<Aeroport>();
+	public List<CompagnieAerienne> findAll() {
+		List<CompagnieAerienne> compagniesAeriennes = new ArrayList<CompagnieAerienne>();
 
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -25,7 +24,7 @@ public class AeroportDaoJdbc implements IAeroportDao {
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("SELECT code, nom FROM aeroport");
+			ps = conn.prepareStatement("SELECT code, nom FROM compagnie_aerienne");
 
 			rs = ps.executeQuery();
 
@@ -33,9 +32,9 @@ public class AeroportDaoJdbc implements IAeroportDao {
 				String code = rs.getString("code");
 				String nom = rs.getString("nom");
 
-				Aeroport aeroport = new Aeroport(code, nom);
+				CompagnieAerienne compagnieAerienne = new CompagnieAerienne(code, nom);
 
-				aeroports.add(aeroport);
+				compagniesAeriennes.add(compagnieAerienne);
 			}
 
 		} catch (SQLException e) {
@@ -50,12 +49,12 @@ public class AeroportDaoJdbc implements IAeroportDao {
 			}
 		}
 
-		return aeroports;
+		return compagniesAeriennes;
 	}
 
 	@Override
-	public Aeroport findById(String id) {
-		Aeroport aeroport = null;
+	public CompagnieAerienne findById(String id) {
+		CompagnieAerienne compagnieAerienne = null;
 
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -63,7 +62,7 @@ public class AeroportDaoJdbc implements IAeroportDao {
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("SELECT nom FROM aeroport WHERE id = ?");
+			ps = conn.prepareStatement("SELECT nom FROM compagnie_aerienne WHERE code = ?");
 
 			ps.setString(1, id);
 
@@ -72,7 +71,7 @@ public class AeroportDaoJdbc implements IAeroportDao {
 			if (rs.next()) {
 				String nom = rs.getString("nom");
 
-				aeroport = new Aeroport(id, nom);
+				compagnieAerienne = new CompagnieAerienne(id, nom);
 			}
 
 		} catch (SQLException e) {
@@ -87,18 +86,18 @@ public class AeroportDaoJdbc implements IAeroportDao {
 			}
 		}
 
-		return aeroport;
+		return compagnieAerienne;
 	}
 
 	@Override
-	public void create(Aeroport obj) {
+	public void create(CompagnieAerienne obj) {
 		
 		Connection conn = null;
 		PreparedStatement ps = null;
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("INSERT INTO aeroport (code,nom) VALUES (?,?)");
+			ps = conn.prepareStatement("INSERT INTO compagnie_aerienne (code,nom) VALUES (?,?)");
 
 			ps.setString(1, obj.getCode());
 			ps.setString(2, obj.getNom());
@@ -120,17 +119,18 @@ public class AeroportDaoJdbc implements IAeroportDao {
 	}
 
 	@Override
-	public void update(Aeroport obj) {
+	public void update(CompagnieAerienne obj) {
 		
 		Connection conn = null;
 		PreparedStatement ps = null;
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("UPDATE aeroport SET nom = ? WHERE code = ?");
+			ps = conn.prepareStatement("UPDATE compagnie_aerienne SET nom = ? WHERE code = ?");
 
 			ps.setString(1, obj.getNom());
 			ps.setString(2, obj.getCode());
+			
 
 			int rows = ps.executeUpdate();
 
@@ -152,22 +152,23 @@ public class AeroportDaoJdbc implements IAeroportDao {
 	}
 
 	@Override
-	public void delete(Aeroport obj) {
+	public void delete(CompagnieAerienne obj) {
 		
 		deleteById(obj.getCode());
 		
 	}
 
 	@Override
-	public void deleteById(String code) {
+	public void deleteById(String id) {
+		
 		Connection conn = null;
 		PreparedStatement ps = null;
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("DELETE FROM aeroport WHERE code = ?");
+			ps = conn.prepareStatement("DELETE FROM compagnie_aerienne WHERE code = ?");
 
-			ps.setString(1, code);
+			ps.setString(1, id);
 
 			int rows = ps.executeUpdate();
 
@@ -185,6 +186,7 @@ public class AeroportDaoJdbc implements IAeroportDao {
 				e.printStackTrace();
 			}
 		}
+		
 		
 	}
 
