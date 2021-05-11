@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +24,27 @@ public class AdresseDaoJdbc implements IAdresseDao{
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("SELECT id, rue, complement, code_postal, ville, pays FROM evaluation");
+			ps = conn.prepareStatement("SELECT id, rue, complement, code_postal, ville, pays, client_id  FROM adresse");
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
 				Long id = rs.getLong("id");
-				String rue = rs.getString("");
+				String rue = rs.getString("rue");
+				String complement = rs.getString("complement");
+				String code_postal = rs.getString("code_postal");
+				String ville = rs.getString("ville");
+				String pays = rs.getString("pays");
+				Long clientId = rs.getLong("client_id");
 
-				Adresse evaluation = new Adresse();
+				Adresse adresse = new Adresse();
+				adresse.setId(id);
+				adresse.setRue(rue);
+				adresse.setComplement(complement);
+				adresse.setCodePostal(code_postal);
+				adresse.setVille(ville);
+				adresse.setPays(pays);
 
-				adresses.add(evaluation);
+				adresses.add(adresse);
 			}
 
 		} catch (SQLException e) {
@@ -58,32 +70,177 @@ public class AdresseDaoJdbc implements IAdresseDao{
 
 	@Override
 	public Adresse findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Adresse adresse = null;
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			conn = Application.getInstance().getConnection();
+			ps = conn.prepareStatement("SELECT rue, complement, code_postal, ville, pays, client_id  FROM adresse WHERE id = ?");
+			ps.setLong(1, id);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				String rue = rs.getString("rue");
+				String complement = rs.getString("complement");
+				String code_postal = rs.getString("code_postal");
+				String ville = rs.getString("ville");
+				String pays = rs.getString("pays");
+				Long clientId = rs.getLong("client_id");
+
+				adresse = new Adresse();
+				adresse.setId(id);
+				adresse.setRue(rue);
+				adresse.setComplement(complement);
+				adresse.setCodePostal(code_postal);
+				adresse.setVille(ville);
+				adresse.setPays(pays);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return adresse;
 	}
 
 	@Override
 	public void create(Adresse obj) {
-		// TODO Auto-generated method stub
-		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			conn = Application.getInstance().getConnection();
+			ps = conn.prepareStatement("INSERT INTO adresse (rue, complement, code_postal, ville, pays) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			
+			ps.setString(1, obj.getRue());
+			ps.setString(2, obj.getComplement());
+			ps.setString(3, obj.getCodePostal());
+			ps.setString(4, obj.getVille());
+			ps.setString(5, obj.getPays());
+			
+			int rows = ps.executeUpdate();
+			
+			if(rows > 0) {
+				rs = ps.getGeneratedKeys();
+				if(rs.next()) {
+					Long id = rs.getLong(1);
+					obj.setId(id);
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
 	public void update(Adresse obj) {
-		// TODO Auto-generated method stub
-		
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		try {
+			conn = Application.getInstance().getConnection();
+			ps = conn.prepareStatement("UPDATE adresse SET rue = ? , complement = ? , code_postal = ? , ville = ? , pays = ? WHERE id = ?");
+			
+			ps.setString(1, obj.getRue());
+			ps.setString(2, obj.getComplement());
+			ps.setString(3, obj.getCodePostal());
+			ps.setString(4, obj.getVille());
+			ps.setString(5, obj.getPays());
+			
+			ps.setLong(6, obj.getId());
+			
+			int rows = ps.executeUpdate();
+			
+			if(rows != 1) {
+				// TODO renvoyer une exception
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
 	public void delete(Adresse obj) {
-		// TODO Auto-generated method stub
-		
+		deleteById(obj.getId());
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		// TODO Auto-generated method stub
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		try {
+			conn = Application.getInstance().getConnection();
+			ps = conn.prepareStatement("DELETE FROM adresse WHERE id = ?");
+			
+			ps.setLong(1, id);
+			
+			int rows = ps.executeUpdate();
+			
+			if(rows != 1) {
+				// TODO renvoyer une exception
+			}
 		
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
