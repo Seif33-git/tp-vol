@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sopra.vol.Application;
+import sopra.vol.dao.IAeroportDao;
 import sopra.vol.dao.IVolDao;
+import sopra.vol.model.Aeroport;
 import sopra.vol.model.StatutVol;
 import sopra.vol.model.Vol;
 
@@ -43,7 +45,11 @@ public class VolDaoJdbc implements IVolDao {
 				Vol vol = new Vol(id, StatutVol.valueOf(statut_vol), dt_depart, dt_arrivee, nb_place_dispo);
 				
 				if (depart_code != null && arrivee_code != null) {
-					// TODO
+					IAeroportDao aeroDao = Application.getInstance().getAeroportDao();
+					Aeroport aeroDepart = aeroDao.findById(depart_code);
+					Aeroport aeroArrivee = aeroDao.findById(arrivee_code);
+					vol.setDepart(aeroDepart);
+					vol.setArrivee(aeroArrivee);
 				}
 
 				vols.add(vol);
@@ -91,7 +97,11 @@ public class VolDaoJdbc implements IVolDao {
 
 				vol = new Vol(id, StatutVol.valueOf(statut_vol), dt_depart, dt_arrivee, nb_place_dispo);
 				if (depart_code != null && arrivee_code != null) {
-					// TODO
+					IAeroportDao aeroDao = Application.getInstance().getAeroportDao();
+					Aeroport aeroDepart = aeroDao.findById(depart_code);
+					Aeroport aeroArrivee = aeroDao.findById(arrivee_code);
+					vol.setDepart(aeroDepart);
+					vol.setArrivee(aeroArrivee);
 				}
 			}
 
@@ -134,13 +144,13 @@ public class VolDaoJdbc implements IVolDao {
 			ps.setString(3, vol.getStatutVol().toString());
 			
 			if (vol.getDepart() != null) {
-				// TODO
+				ps.setString(4, vol.getDepart().getCode());
 			} else {
 				ps.setNull(4, Types.DATE);
 			}
 			
 			if (vol.getArrivee() != null) {
-				// TODO
+				ps.setString(5, vol.getArrivee().getCode());
 			} else {
 				ps.setNull(5, Types.DATE);
 			}
@@ -195,17 +205,17 @@ public class VolDaoJdbc implements IVolDao {
 			
 			ps.setString(3, vol.getStatutVol().toString());
 			
-//			if (vol.getDepart() != null) {
-//				// TODO
-//			} else {
-//				ps.setNull(4, Types.DATE);
-//			}
-//			
-//			if (vol.getArrivee() != null) {
-//				// TODO
-//			} else {
-//				ps.setNull(5, Types.DATE);
-//			}
+			if (vol.getDepart() != null) {
+				ps.setString(4, vol.getDepart().getCode());
+			} else {
+				ps.setNull(4, Types.DATE);
+			}
+			
+			if (vol.getArrivee() != null) {
+				ps.setString(5, vol.getArrivee().getCode());
+			} else {
+				ps.setNull(5, Types.DATE);
+			}
 			
 			ps.setInt(6, vol.getNbPlaceDispo());
 			ps.setLong(7, vol.getId());
