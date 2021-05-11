@@ -6,8 +6,10 @@ import java.sql.SQLException;
 
 import sopra.vol.dao.IAeroportDao;
 import sopra.vol.dao.IVilleDao;
+import sopra.vol.dao.IVolDao;
 import sopra.vol.dao.jdbc.AeroportDaoJdbc;
 import sopra.vol.dao.jdbc.VilleDaoJdbc;
+import sopra.vol.dao.jdbc.VolDaoJdbc;
 
 public class Application {
 	private static Application instance = null;
@@ -15,6 +17,7 @@ public class Application {
 	
 	private final IVilleDao villeDao = new VilleDaoJdbc();
 	private final IAeroportDao aeroportDao = new AeroportDaoJdbc();
+	private final IVolDao volDao = new VolDaoJdbc();
 
 	private final String jdbcUrl = "jdbc:mysql://localhost:3306/tp_vol";
 	private final String username = "root";
@@ -43,6 +46,10 @@ public class Application {
 	
 	public IAeroportDao getAeroportDao() {
 		return aeroportDao;
+	}
+	
+	public IVolDao getVolDao() {
+		return volDao;
 	}
 
 	public Connection getConnection() throws SQLException {

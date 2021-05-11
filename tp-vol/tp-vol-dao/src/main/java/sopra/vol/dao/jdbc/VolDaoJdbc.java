@@ -146,16 +146,18 @@ public class VolDaoJdbc implements IVolDao {
 			if (vol.getDepart() != null) {
 				ps.setString(4, vol.getDepart().getCode());
 			} else {
-				ps.setNull(4, Types.DATE);
+				ps.setNull(4, Types.VARCHAR);
 			}
 			
 			if (vol.getArrivee() != null) {
 				ps.setString(5, vol.getArrivee().getCode());
 			} else {
-				ps.setNull(5, Types.DATE);
+				ps.setNull(5, Types.VARCHAR);
 			}
 			
 			ps.setInt(6, vol.getNbPlaceDispo());
+			
+			ps.executeUpdate();
 
 			int rows = ps.executeUpdate();
 
@@ -164,6 +166,7 @@ public class VolDaoJdbc implements IVolDao {
 
 				if (keys.next()) {
 					Long id = keys.getLong(1);
+					System.out.println("CREATE ID " + id);
 					vol.setId(id);
 				}
 			} else {
@@ -219,12 +222,15 @@ public class VolDaoJdbc implements IVolDao {
 			
 			ps.setInt(6, vol.getNbPlaceDispo());
 			ps.setLong(7, vol.getId());
+			System.out.println("UPATE ID " + vol.getId());
 
-			int rows = ps.executeUpdate();
-
-			if (rows != 1) {
-				throw new SQLException("Mise à jour en échec");
-			}
+			ps.executeUpdate();
+			
+//			int rows = ps.executeUpdate();
+//			
+//			if (rows != 1) {
+//				throw new SQLException("Mise à jour en échec");
+//			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -253,12 +259,14 @@ public class VolDaoJdbc implements IVolDao {
 			ps = conn.prepareStatement("DELETE FROM vol WHERE id = ?");
 
 			ps.setLong(1, id);
+			
+			ps.executeUpdate();
 
-			int rows = ps.executeUpdate();
-
-			if (rows != 1) {
-				throw new SQLException("Suppression en échec");
-			}
+//			int rows = ps.executeUpdate();
+//			
+//			if (rows != 1) {
+//				throw new SQLException("Suppression en échec");
+//			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
