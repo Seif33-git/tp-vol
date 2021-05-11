@@ -82,20 +82,9 @@ create table CLIENT
    SIRET                varchar(30),
    NUMERO_TVA           varchar(30),
    STATUT_JURIDIQUE     varchar(10),
-   primary key (ID)
-);
-
-create table ADRESSE
-(
-   ID                   integer not null auto_increment,
-   RUE	                varchar(255),
-   COMPLEMENT           varchar(255),
-   CODE_POSTAL          varchar(10),
-   VILLE                varchar(100),
-   PAYS                 varchar(100),
-   CLIENT_ID 			integer,
+   ADRESSE_ID           integer,
    primary key (ID),
-   foreign key (CLIENT_ID) references CLIENT(ID)
+   foreign key (ADRESSE_ID) references ADRESSE(ID)
 );
 
 create table RESERVATION
@@ -116,7 +105,7 @@ create table BILLET
    NUMERO_PLACE         varchar(4),
    CLASSE	            varchar(5),
    PRIX		            float,
-   ORDRE                integer,
+   ORDRE                integer
    RESERVATION_NUMERO   integer not null,
    VOL_ID           	integer not null,
    primary key (ID),
@@ -124,13 +113,3 @@ create table BILLET
    foreign key (VOL_ID) references VOL(ID)
 );
 
-select *
-from client;
-
-select * 
-from adresse;
-
-/*
-delete from adresse
-where id in (1,2);
-*/
