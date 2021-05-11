@@ -129,3 +129,8 @@ from client;
 
 select * 
 from adresse;
+
+/*
+delete from adresse
+where id in (1,2);
+*/
