@@ -40,6 +40,10 @@ public class Application {
 	public IVilleDao getVilleDao() {
 		return villeDao;
 	}
+	
+	public IAeroportDao getAeroportDao() {
+		return aeroportDao;
+	}
 
 	public Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(jdbcUrl, username, password);
