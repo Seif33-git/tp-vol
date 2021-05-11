@@ -6,3 +6,5 @@
 .classpath
 
 target/
+
+tp-vol/tp-vol-dao/src/main/resources/schema.sql
