@@ -123,3 +123,9 @@ create table BILLET
    foreign key (RESERVATION_NUMERO) references RESERVATION(NUMERO),
    foreign key (VOL_ID) references VOL(ID)
 );
+
+select * 
+from client;
+
+select *
+from adresse;

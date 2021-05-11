@@ -42,9 +42,6 @@ public class TestDaoTristan {
 		Client client = clientDao.findById(2L);
 		System.out.println(client);
 		
-//		clientDao.deleteById(1L);
-//		clientDao.deleteById(2L);
-		
 		clients = clientDao.findAll();
 		
 		System.out.println(clients.size());
@@ -96,10 +93,6 @@ public class TestDaoTristan {
 		Adresse a5 = adresseDao.findById(1L);
 		
 		System.out.println(a5.getVille());
-		
-//		adresseDao.delete(a1);
-//		adresseDao.delete(a2);
-		
 	}
 
 }
