@@ -5,8 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import sopra.vol.dao.IAeroportDao;
+import sopra.vol.dao.ICompagnieAerienneDao;
 import sopra.vol.dao.IVilleDao;
 import sopra.vol.dao.jdbc.AeroportDaoJdbc;
+import sopra.vol.dao.jdbc.CompagnieAerienneDaoJdbc;
 import sopra.vol.dao.jdbc.VilleDaoJdbc;
 
 public class Application {
@@ -15,6 +17,7 @@ public class Application {
 	
 	private final IVilleDao villeDao = new VilleDaoJdbc();
 	private final IAeroportDao aeroportDao = new AeroportDaoJdbc();
+	private final ICompagnieAerienneDao compagnieAerienneDao = new CompagnieAerienneDaoJdbc();
 
 	private final String jdbcUrl = "jdbc:mysql://localhost:3306/tp_vol";
 	private final String username = "root";
@@ -39,6 +42,14 @@ public class Application {
 	
 	public IVilleDao getVilleDao() {
 		return villeDao;
+	}
+	
+	public IAeroportDao getAeroportDao() {
+		return aeroportDao;
+	}
+	
+	public ICompagnieAerienneDao getCompagnieAerienneDao() {
+		return compagnieAerienneDao;
 	}
 
 	public Connection getConnection() throws SQLException {
