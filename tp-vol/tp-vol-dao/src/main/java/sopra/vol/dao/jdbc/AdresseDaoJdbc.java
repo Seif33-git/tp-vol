@@ -5,12 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 import sopra.vol.Application;
 import sopra.vol.dao.IAdresseDao;
 import sopra.vol.model.Adresse;
+import sopra.vol.model.Client;
 
 public class AdresseDaoJdbc implements IAdresseDao{
 
@@ -43,6 +45,11 @@ public class AdresseDaoJdbc implements IAdresseDao{
 				adresse.setCodePostal(code_postal);
 				adresse.setVille(ville);
 				adresse.setPays(pays);
+				
+				if(clientId != null) {
+					Client client = Application.getInstance().getClientDao().findById(clientId);
+					adresse.setClient(client);
+				}
 
 				adresses.add(adresse);
 			}
@@ -97,6 +104,11 @@ public class AdresseDaoJdbc implements IAdresseDao{
 				adresse.setCodePostal(code_postal);
 				adresse.setVille(ville);
 				adresse.setPays(pays);
+				
+				if(clientId != null) {
+					Client client = Application.getInstance().getClientDao().findById(clientId);
+					adresse.setClient(client);
+				}
 			}
 
 		} catch (SQLException e) {
@@ -128,13 +140,20 @@ public class AdresseDaoJdbc implements IAdresseDao{
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("INSERT INTO adresse (rue, complement, code_postal, ville, pays) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			ps = conn.prepareStatement("INSERT INTO adresse (rue, complement, code_postal, ville, pays, client_id) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 			
 			ps.setString(1, obj.getRue());
 			ps.setString(2, obj.getComplement());
-			ps.setString(3, obj.getCodePostal());
+			ps.setString(3, obj.getCodePostal()); 
 			ps.setString(4, obj.getVille());
 			ps.setString(5, obj.getPays());
+
+			if(obj.getClient() != null && obj.getClient().getId() != null) {
+				System.out.println("Hello bitcj");
+				ps.setLong(6, obj.getClient().getId());
+			} else {
+				ps.setNull(6, Types.INTEGER);
+			}
 			
 			int rows = ps.executeUpdate();
 			
@@ -172,7 +191,7 @@ public class AdresseDaoJdbc implements IAdresseDao{
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("UPDATE adresse SET rue = ? , complement = ? , code_postal = ? , ville = ? , pays = ? WHERE id = ?");
+			ps = conn.prepareStatement("UPDATE adresse SET rue = ? , complement = ? , code_postal = ? , ville = ? , pays = ?, client_id = ? WHERE id = ?");
 			
 			ps.setString(1, obj.getRue());
 			ps.setString(2, obj.getComplement());
@@ -180,7 +199,13 @@ public class AdresseDaoJdbc implements IAdresseDao{
 			ps.setString(4, obj.getVille());
 			ps.setString(5, obj.getPays());
 			
-			ps.setLong(6, obj.getId());
+			if(obj.getClient() != null && obj.getClient().getId() != null) {
+				ps.setLong(6, obj.getClient().getId());
+			} else {
+				ps.setNull(6, Types.INTEGER);
+			}
+			
+			ps.setLong(7, obj.getId());
 			
 			int rows = ps.executeUpdate();
 			
