@@ -11,11 +11,13 @@ import sopra.vol.dao.ICompagnieAerienneDao;
 import sopra.vol.dao.IReservationDao;
 import sopra.vol.dao.IVilleDao;
 import sopra.vol.dao.jdbc.AdresseDaoJdbc;
+import sopra.vol.dao.IVolDao;
 import sopra.vol.dao.jdbc.AeroportDaoJdbc;
 import sopra.vol.dao.jdbc.CompagnieAerienneDaoJdbc;
 import sopra.vol.dao.jdbc.ClientDaoJdbc;
 import sopra.vol.dao.jdbc.ReservationDaoJdbc;
 import sopra.vol.dao.jdbc.VilleDaoJdbc;
+import sopra.vol.dao.jdbc.VolDaoJdbc;
 
 public class Application {
 	private static Application instance = null;
@@ -23,6 +25,7 @@ public class Application {
 	
 	private final IVilleDao villeDao = new VilleDaoJdbc();
 	private final IAeroportDao aeroportDao = new AeroportDaoJdbc();
+	private final IVolDao volDao = new VolDaoJdbc();
 	private final IReservationDao reservationDao = new ReservationDaoJdbc();
 	private final IClientDao clientDao = new ClientDaoJdbc();
 	private final IAdresseDao adresseDao = new AdresseDaoJdbc();
@@ -51,6 +54,14 @@ public class Application {
 	
 	public IVilleDao getVilleDao() {
 		return villeDao;
+	}
+	
+	public IAeroportDao getAeroportDao() {
+		return aeroportDao;
+	}
+	
+	public IVolDao getVolDao() {
+		return volDao;
 	}
 	
 	public IClientDao getClientDao() {
