@@ -82,7 +82,6 @@ create table CLIENT
    SIRET                varchar(30),
    NUMERO_TVA           varchar(30),
    STATUT_JURIDIQUE     varchar(10),
-   ADRESSE_ID           integer,
    primary key (ID)
 );
 
@@ -127,3 +126,6 @@ create table BILLET
 
 select *
 from client;
+
+select * 
+from adresse;
