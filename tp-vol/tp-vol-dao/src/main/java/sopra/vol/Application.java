@@ -56,10 +56,6 @@ public class Application {
 		return villeDao;
 	}
 	
-	public IAeroportDao getAeroportDao() {
-		return aeroportDao;
-	}
-	
 	public IVolDao getVolDao() {
 		return volDao;
 	}
@@ -87,7 +83,4 @@ public class Application {
 	public IReservationDao getReservationDao() {
 		return reservationDao;
 	}
-	
-	
-
 }
