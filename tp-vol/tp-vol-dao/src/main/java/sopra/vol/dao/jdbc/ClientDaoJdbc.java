@@ -28,7 +28,7 @@ public class ClientDaoJdbc implements IClientDao {
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("SELECT id, type, nom, prenom, siret, numero_tva, statut_juridique, adresse_id FROM client");
+			ps = conn.prepareStatement("SELECT id, type, nom, prenom, siret, numero_tva, statut_juridique FROM client");
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
@@ -38,18 +38,26 @@ public class ClientDaoJdbc implements IClientDao {
 				String prenom = rs.getString("prenom");
 				String siret = rs.getString("siret");
 				String numeroTva = rs.getString("numero_tva");
-				StatutJuridique statutJuridique = StatutJuridique.valueOf(rs.getString("statut_juridique"));
-				Integer adresseIp = rs.getInt("adresse_id");
+				
+				StatutJuridique statutJuridique = null;
+				if(rs.getString("statut_juridique") != null ) {
+					statutJuridique = StatutJuridique.valueOf(rs.getString("statut_juridique"));
+				}
 				
 				Particulier particulier = null;
 				Entreprise entreprise = null;
-				if(type == "p") {
+				
+				System.out.println(type);
+				
+				if(type.equals("p")) {
 					particulier = new Particulier();
 					particulier.setId(id);
 					particulier.setNom(nom);
 					particulier.setPrenom(prenom);
 					clients.add(particulier);
-				} else if (type == "e") {
+				}  
+				
+				if (type.equals("e")) {
 					entreprise = new Entreprise();
 					entreprise.setId(id);
 					entreprise.setNom(nom);
@@ -91,7 +99,7 @@ public class ClientDaoJdbc implements IClientDao {
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("SELECT id, type, nom, prenom, siret, numero_tva, statut_juridique, adresse_id FROM client WHERE id = ?");
+			ps = conn.prepareStatement("SELECT id, type, nom, prenom, siret, numero_tva, statut_juridique FROM client WHERE id = ?");
 			ps.setLong(1, id);
 			rs = ps.executeQuery();
 
@@ -101,18 +109,23 @@ public class ClientDaoJdbc implements IClientDao {
 				String prenom = rs.getString("prenom");
 				String siret = rs.getString("siret");
 				String numeroTva = rs.getString("numero_tva");
-				StatutJuridique statutJuridique = StatutJuridique.valueOf(rs.getString("statut_juridique"));
-				Integer adresseIp = rs.getInt("adresse_id");
+				
+				StatutJuridique statutJuridique = null;
+				if(rs.getString("statut_juridique") != null ) {
+					statutJuridique = StatutJuridique.valueOf(rs.getString("statut_juridique"));
+				}
 				
 				Particulier particulier = null;
 				Entreprise entreprise = null;
-				if(type == "p") {
+				if(type.equals("p")) {
 					particulier = new Particulier();
 					particulier.setId(id);
 					particulier.setNom(nom);
 					particulier.setPrenom(prenom);
 					client = particulier;
-				} else if (type == "e") {
+				}
+				
+				if (type.equals("e")) {
 					entreprise = new Entreprise();
 					entreprise.setId(id);
 					entreprise.setNom(nom);
@@ -152,7 +165,7 @@ public class ClientDaoJdbc implements IClientDao {
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("INSERT INTO client (type, nom, prenom, siret, numero_tva, statut_juridique, adresse_id) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			ps = conn.prepareStatement("INSERT INTO client (type, nom, prenom, siret, numero_tva, statut_juridique) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 			
 			if(obj instanceof Particulier) {
 				ps.setString(1, "p");
@@ -161,7 +174,6 @@ public class ClientDaoJdbc implements IClientDao {
 				ps.setNull(4, Types.VARCHAR);
 				ps.setNull(5, Types.VARCHAR);
 				ps.setNull(6, Types.VARCHAR);
-				ps.setNull(7, Types.INTEGER);
 			}
 			
 			if(obj instanceof Entreprise) {
@@ -171,7 +183,6 @@ public class ClientDaoJdbc implements IClientDao {
 				ps.setString(4, ((Entreprise)obj).getSiret());
 				ps.setString(5, ((Entreprise)obj).getNumeroTVA());
 				ps.setString(6, ((Entreprise)obj).getStatutJuridique().toString());
-				ps.setNull(7, Types.INTEGER);
 			}
 			
 			int rows = ps.executeUpdate();
@@ -212,7 +223,7 @@ public class ClientDaoJdbc implements IClientDao {
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("UPDATE client SET type = ?, nom = ?, prenom = ?, siret = ?, numero_tva = ?, statut_juridique = ?, adresse_id = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS);
+			ps = conn.prepareStatement("UPDATE client SET type = ?, nom = ?, prenom = ?, siret = ?, numero_tva = ?, statut_juridique = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS);
 			
 			if(obj instanceof Particulier) {
 				ps.setString(1, "p");
@@ -221,7 +232,6 @@ public class ClientDaoJdbc implements IClientDao {
 				ps.setNull(4, Types.VARCHAR);
 				ps.setNull(5, Types.VARCHAR);
 				ps.setNull(6, Types.VARCHAR);
-				ps.setNull(7, Types.INTEGER);
 			}
 			
 			if(obj instanceof Entreprise) {
@@ -231,10 +241,9 @@ public class ClientDaoJdbc implements IClientDao {
 				ps.setString(4, ((Entreprise)obj).getSiret());
 				ps.setString(5, ((Entreprise)obj).getNumeroTVA());
 				ps.setString(6, ((Entreprise)obj).getStatutJuridique().toString());
-				ps.setNull(7, Types.INTEGER);
 			}
 			
-			ps.setLong(8, obj.getId());
+			ps.setLong(7, obj.getId());
 			
 			int rows = ps.executeUpdate();
 			

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sopra.vol.Application;
-import sopra.vol.model.Evaluation;
 import sopra.vol.dao.IAdresseDao;
 import sopra.vol.model.Adresse;
 
