@@ -27,14 +27,14 @@ public class ReservationDaoJdbc implements IReservationDao{
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("SELECT numero, dtReservation, statut FROM reservation");
+			ps = conn.prepareStatement("SELECT NUMERO, DT_RESERVATION, STATUT_RESERVATION FROM reservation");
 
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
-				Integer numero = rs.getInt("id");
-				Date dtReservation = rs.getDate("dtReservation");
-				StatutReservation statut = StatutReservation.valueOf(rs.getString("statut"));
+				Integer numero = rs.getInt("NUMERO");
+				Date dtReservation = rs.getDate("DT_RESERVATION");
+				StatutReservation statut = StatutReservation.valueOf(rs.getString("STATUT_RESERVATION"));
 
 				Reservation reservation = new Reservation(numero, dtReservation, statut);
 
@@ -66,15 +66,15 @@ public class ReservationDaoJdbc implements IReservationDao{
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("SELECT dtReservation, statut FROM reservation WHERE numero = ?");
+			ps = conn.prepareStatement("SELECT DT_RESERVATION, STATUT_RESERVATION FROM reservation WHERE NUMERO = ?");
 
 			ps.setInt(1, numero);
 
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				Date dtReservation = rs.getDate("dtReservation");
-				StatutReservation statut = StatutReservation.valueOf(rs.getString("statut"));
+				Date dtReservation = rs.getDate("DT_RESERVATION");
+				StatutReservation statut = StatutReservation.valueOf(rs.getString("STATUT_RESERVATION"));
 
 				reservation = new Reservation(numero, dtReservation, statut);
 			}
@@ -98,35 +98,34 @@ public class ReservationDaoJdbc implements IReservationDao{
 	public void create(Reservation obj) {
 		Connection conn = null;
 		PreparedStatement ps = null;
+		ResultSet rs = null;
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("INSERT INTO reservation (dtReservation, statut) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+			ps = conn.prepareStatement("INSERT INTO reservation (NUMERO, DT_RESERVATION, STATUT_RESERVATION) VALUES (?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
 
-			
+			ps.setInt(1, obj.getNumero());
 			if (obj.getDtReservation() != null) {
-				ps.setDate(1, new java.sql.Date(obj.getDtReservation().getTime()));
+				ps.setDate(2, new java.sql.Date(obj.getDtReservation().getTime()));
 			} else {
-				ps.setNull(1, Types.DATE);
+				ps.setNull(2, Types.DATE);
 			}
 			if (obj.getStatut() != null) {
-				ps.setString(2, obj.getStatut().toString());
+				ps.setString(3, obj.getStatut().toString());
 			} else {
-				ps.setNull(2, Types.VARCHAR);
+				ps.setNull(3, Types.VARCHAR);
 			}
-
+			
 			int rows = ps.executeUpdate();
-
-			if (rows == 1) {
-				ResultSet keys = ps.getGeneratedKeys();
-
-				if (keys.next()) {
-					Integer numero = keys.getInt(1);
+			
+			if(rows > 0) {
+				rs = ps.getGeneratedKeys();
+				if(rs.next()) {
+					Integer numero = rs.getInt(1);
 					obj.setNumero(numero);
 				}
-			} else {
-				throw new SQLException("Insertion en échec");
 			}
+
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -147,8 +146,9 @@ public class ReservationDaoJdbc implements IReservationDao{
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("UPDATE reservation SET dtReservation = ?, statut = ? WHERE id = ?");
-
+			ps = conn.prepareStatement("UPDATE reservation SET DT_RESERVATION = ?, STATUT_RESERVATION = ? WHERE NUMERO = ?");
+			
+			ps.setInt(3, obj.getNumero());
 			if (obj.getDtReservation() != null) {
 				ps.setDate(1, new java.sql.Date(obj.getDtReservation().getTime()));
 			} else {
@@ -192,7 +192,7 @@ public class ReservationDaoJdbc implements IReservationDao{
 
 		try {
 			conn = Application.getInstance().getConnection();
-			ps = conn.prepareStatement("DELETE FROM reservation WHERE numero = ?");
+			ps = conn.prepareStatement("DELETE FROM reservation WHERE NUMERO = ?");
 
 			ps.setLong(1, numero);
 
