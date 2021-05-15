@@ -6,14 +6,18 @@ import java.sql.SQLException;
 
 import sopra.vol.dao.IAdresseDao;
 import sopra.vol.dao.IAeroportDao;
+import sopra.vol.dao.IBilletDao;
 import sopra.vol.dao.IClientDao;
 import sopra.vol.dao.ICompagnieAerienneDao;
+import sopra.vol.dao.ICompagnieAerienneVolDao;
 import sopra.vol.dao.IReservationDao;
 import sopra.vol.dao.IVilleDao;
 import sopra.vol.dao.jdbc.AdresseDaoJdbc;
 import sopra.vol.dao.IVolDao;
 import sopra.vol.dao.jdbc.AeroportDaoJdbc;
+import sopra.vol.dao.jdbc.BilletDaoJdbc;
 import sopra.vol.dao.jdbc.CompagnieAerienneDaoJdbc;
+import sopra.vol.dao.jdbc.CompagnieAerienneVolDaoJdbc;
 import sopra.vol.dao.jdbc.ClientDaoJdbc;
 import sopra.vol.dao.jdbc.ReservationDaoJdbc;
 import sopra.vol.dao.jdbc.VilleDaoJdbc;
@@ -30,6 +34,8 @@ public class Application {
 	private final IClientDao clientDao = new ClientDaoJdbc();
 	private final IAdresseDao adresseDao = new AdresseDaoJdbc();
 	private final ICompagnieAerienneDao compagnieAerienneDao = new CompagnieAerienneDaoJdbc();
+	private final IBilletDao billetDao = new BilletDaoJdbc();
+	private final ICompagnieAerienneVolDao compagnieAerienneVolDao = new CompagnieAerienneVolDaoJdbc();
 
 	private final String jdbcUrl = "jdbc:mysql://localhost:3306/tp_vol";
 	private final String username = "root";
@@ -82,5 +88,13 @@ public class Application {
 
 	public IReservationDao getReservationDao() {
 		return reservationDao;
+	}
+	
+	public IBilletDao getBilletDao() {
+		return billetDao;
+	}
+	
+	public ICompagnieAerienneVolDao getCompagnieAerienneVolDao() {
+		return compagnieAerienneVolDao;
 	}
 }
