@@ -108,4 +108,13 @@ public class Vol {
 		this.compagnieAeriennes = compagnieAeriennes;
 	}
 
+	@Override
+	public String toString() {
+		return "Vol [id=" + id + ", statutVol=" + statutVol + ", dtDepart=" + dtDepart + ", dtArrivee=" + dtArrivee
+				+ ", depart=" + depart + ", arrivee=" + arrivee + ", nbPlaceDispo=" + nbPlaceDispo + ", billets="
+				+ billets + ", compagnieAeriennes=" + compagnieAeriennes + "]";
+	}
+	
+	
+
 }
